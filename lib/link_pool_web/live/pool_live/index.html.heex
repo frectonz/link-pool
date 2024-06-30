@@ -15,21 +15,16 @@
     <h2 class="text-xl">No pools found</h2>
   </section>
 
-  <section
-    :for={{id, pool} <- @streams.pools}
-    class="card bg-base-100 shadow-md"
-    phx-click={JS.navigate(~p"/pools/#{pool}")}
-    id={id}
-  >
+  <section :for={{id, pool} <- @streams.pools} class="card bg-white/20 shadow-sm" id={id}>
     <div class="card-body">
       <h2 class="card-title"><%= pool.title %></h2>
       <p><%= pool.description %></p>
       <div class="card-actions justify-end">
-        <.link class="btn btn-sm btn-primary" navigate={~p"/pools/#{pool}"}>View Pool</.link>
-        <.link class="btn btn-sm btn-secondary" patch={~p"/pools/#{pool}/edit"}>Edit</.link>
+        <.link class="btn btn-sm btn-primary" navigate={~p"/pools/#{pool}"}>View</.link>
+        <.link class="btn btn-sm btn-primary" patch={~p"/pools/#{pool}/edit"}>Edit</.link>
         <.link
           class="btn btn-sm btn-error"
-          phx-click={JS.push("delete", value: %{id: pool.id}) |> hide("#pool-#{id}")}
+          phx-click={JS.push("delete", value: %{id: pool.id}) |> hide(id)}
           data-confirm="Are you sure?"
         >
           Delete
