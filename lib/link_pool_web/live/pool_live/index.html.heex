@@ -1,0 +1,51 @@
+<header class="flex justify-between">
+  <h1 class="text-3xl font-bold">Hi 👋</h1>
+
+  <.link patch={~p"/pools/new"}>
+    <.button>New Pool</.button>
+  </.link>
+</header>
+
+<main id="pools" phx-update="stream" class="grid grid-cols-1 gap-4 my-4">
+  <section
+    id="songs-empty"
+    class="only:flex hidden flex-col items-center gap-8 bg-base-200 rounded-xl py-8"
+  >
+    <img src="/images/open_box.svg" class="max-w-sm rounded-lg" />
+    <h2 class="text-xl">No pools found</h2>
+  </section>
+
+  <section
+    :for={{id, pool} <- @streams.pools}
+    class="card bg-base-100 shadow-md"
+    phx-click={JS.navigate(~p"/pools/#{pool}")}
+    id={id}
+  >
+    <div class="card-body">
+      <h2 class="card-title"><%= pool.title %></h2>
+      <p><%= pool.description %></p>
+      <div class="card-actions justify-end">
+        <.link class="btn btn-sm btn-primary" navigate={~p"/pools/#{pool}"}>View Pool</.link>
+        <.link class="btn btn-sm btn-secondary" patch={~p"/pools/#{pool}/edit"}>Edit</.link>
+        <.link
+          class="btn btn-sm btn-error"
+          phx-click={JS.push("delete", value: %{id: pool.id}) |> hide("#pool-#{id}")}
+          data-confirm="Are you sure?"
+        >
+          Delete
+        </.link>
+      </div>
+    </div>
+  </section>
+</main>
+
+<.modal :if={@live_action in [:new, :edit]} id="pool-modal" show on_cancel={JS.patch(~p"/pools")}>
+  <.live_component
+    module={LinkPoolWeb.PoolLive.FormComponent}
+    id={@pool.id || :new}
+    title={@page_title}
+    action={@live_action}
+    pool={@pool}
+    patch={~p"/pools"}
+  />
+</.modal>

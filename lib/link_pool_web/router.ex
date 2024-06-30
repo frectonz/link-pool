@@ -68,6 +68,13 @@ defmodule LinkPoolWeb.Router do
       on_mount: [{LinkPoolWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/pools", PoolLive.Index, :index
+      live "/pools/new", PoolLive.Index, :new
+      live "/pools/:id/edit", PoolLive.Index, :edit
+
+      live "/pools/:id", PoolLive.Show, :show
+      live "/pools/:id/show/edit", PoolLive.Show, :edit
     end
   end
 

@@ -1,0 +1,29 @@
+<.header>
+  Pool <%= @pool.id %>
+  <:subtitle>This is a pool record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/pools/#{@pool}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit pool</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Title"><%= @pool.title %></:item>
+  <:item title="Description"><%= @pool.description %></:item>
+  <:item title="Views"><%= @pool.views %></:item>
+  <:item title="Public"><%= @pool.public %></:item>
+</.list>
+
+<.back navigate={~p"/pools"}>Back to pools</.back>
+
+<.modal :if={@live_action == :edit} id="pool-modal" show on_cancel={JS.patch(~p"/pools/#{@pool}")}>
+  <.live_component
+    module={LinkPoolWeb.PoolLive.FormComponent}
+    id={@pool.id}
+    title={@page_title}
+    action={@live_action}
+    pool={@pool}
+    patch={~p"/pools/#{@pool}"}
+  />
+</.modal>

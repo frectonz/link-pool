@@ -22,6 +22,11 @@
         <ul class="menu menu-horizontal px-1 relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
           <%= if @current_user do %>
             <li>
+              <.link href={~p"/pools"} class="btn btn-primary">
+                Pools
+              </.link>
+            </li>
+            <li>
               <.link href={~p"/users/settings"} class="btn btn-accent">
                 Settings
               </.link>
