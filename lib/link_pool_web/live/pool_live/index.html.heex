@@ -1,9 +1,23 @@
 <header class="flex justify-between">
   <h1 class="text-3xl font-bold">Hi 👋</h1>
 
-  <.link patch={~p"/pools/new"}>
-    <.button>New Pool</.button>
-  </.link>
+  <div>
+    <%= if @page == "all" do %>
+      <.link navigate={~p"/pools?my"}>
+        <.button class="btn-primary">My Pools</.button>
+      </.link>
+    <% end %>
+
+    <%= if @page == "my" do %>
+      <.link navigate={~p"/pools"}>
+        <.button class="btn-primary">All Pools</.button>
+      </.link>
+    <% end %>
+
+    <.link patch={~p"/pools/new"}>
+      <.button>New Pool</.button>
+    </.link>
+  </div>
 </header>
 
 <main id="pools" phx-update="stream" class="grid grid-cols-1 gap-4 my-4">

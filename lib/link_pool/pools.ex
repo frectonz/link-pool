@@ -18,7 +18,20 @@ defmodule LinkPool.Pools do
 
   """
   def list_pools do
-    Repo.all(Pool)
+    Repo.all(from p in Pool, where: p.public)
+  end
+
+  @doc """
+  Returns the list of pools created by a user.
+
+  ## Examples
+
+      iex> my_pools()
+      [%Pool{}, ...]
+
+  """
+  def my_pools do
+    Repo.all(from p in Pool, where: p.public == false)
   end
 
   @doc """

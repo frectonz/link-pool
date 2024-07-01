@@ -5,8 +5,14 @@ defmodule LinkPoolWeb.PoolLive.Index do
   alias LinkPool.Pools.Pool
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, stream(socket, :pools, Pools.list_pools())}
+  def mount(params, _session, socket) do
+    if Map.has_key?(params, "my") do
+      socket = assign(socket, :page, "my")
+      {:ok, stream(socket, :pools, Pools.my_pools())}
+    else
+      socket = assign(socket, :page, "all")
+      {:ok, stream(socket, :pools, Pools.list_pools())}
+    end
   end
 
   @impl true
@@ -28,13 +34,17 @@ defmodule LinkPoolWeb.PoolLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Pools")
+    |> assign(:page_title, "Pools")
     |> assign(:pool, nil)
   end
 
   @impl true
   def handle_info({LinkPoolWeb.PoolLive.FormComponent, {:saved, pool}}, socket) do
-    {:noreply, stream_insert(socket, :pools, pool)}
+    if pool.public do
+      {:noreply, stream_insert(socket, :pools, pool)}
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
