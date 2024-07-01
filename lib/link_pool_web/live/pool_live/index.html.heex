@@ -1,4 +1,4 @@
-<header class="flex justify-between">
+<header class="flex items-center justify-between">
   <h1 class="text-3xl font-bold">Hi 👋</h1>
 
   <div>
@@ -29,7 +29,14 @@
     <h2 class="text-xl">No pools found</h2>
   </section>
 
-  <section :for={{id, pool} <- @streams.pools} class="card bg-white/20 shadow-sm" id={id}>
+  <section
+    :for={{id, pool} <- @streams.pools}
+    class="card card-side bg-base-100 shadow-lg"
+    id={id}
+  >
+    <div class="flex justify-center pl-5 pt-10">
+      <span class="text-5xl">⚡️</span>
+    </div>
     <div class="card-body">
       <h2 class="card-title"><%= pool.title %></h2>
       <p><%= pool.description %></p>

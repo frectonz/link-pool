@@ -9,7 +9,7 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Create a new link pool.</:subtitle>
+        <:subtitle>A pool is a collection of links.</:subtitle>
       </.header>
 
       <.simple_form
