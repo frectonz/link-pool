@@ -40,7 +40,9 @@ defmodule LinkPoolWeb.PoolLive.Index do
 
   @impl true
   def handle_info({LinkPoolWeb.PoolLive.FormComponent, {:saved, pool}}, socket) do
-    if pool.public do
+    on_page = if pool.public, do: "all", else: "my"
+
+    if on_page === socket.assigns.page do
       {:noreply, stream_insert(socket, :pools, pool)}
     else
       {:noreply, socket}
