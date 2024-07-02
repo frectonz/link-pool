@@ -11,7 +11,7 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]">
+  <body class="min-h-screen bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]">
     <div class="navbar bg-base-100 shadow-md">
       <div class="flex-1">
         <.link href={~p"/"} class="btn text-xl">
@@ -19,7 +19,7 @@
         </.link>
       </div>
       <div class="flex-none">
-        <ul class="menu menu-horizontal px-1 relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+        <ul class="menu menu-horizontal px-1 relative z-10 flex items-center gap-4 justify-end">
           <%= if @current_user do %>
             <li>
               <.link href={~p"/pools"} class="btn btn-primary">

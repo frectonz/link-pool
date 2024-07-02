@@ -1,4 +1,5 @@
 defmodule LinkPool.Accounts.User do
+  alias LinkPool.Pools.Pool
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -8,6 +9,7 @@ defmodule LinkPool.Accounts.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+    has_many :pools, Pool
 
     timestamps(type: :utc_datetime)
   end

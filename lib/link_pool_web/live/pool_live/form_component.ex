@@ -67,6 +67,8 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
   end
 
   defp save_pool(socket, :new, pool_params) do
+    pool_params = pool_params |> Map.put("user_id", socket.assigns.user_id)
+
     case Pools.create_pool(pool_params) do
       {:ok, pool} ->
         notify_parent({:saved, pool})

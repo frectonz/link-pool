@@ -31,8 +31,9 @@
 
   <section
     :for={{id, pool} <- @streams.pools}
-    class="card card-side bg-base-100 shadow-lg"
+    class="card card-side bg-base-100 shadow-lg cursor-pointer"
     id={id}
+    phx-click={JS.navigate(~p"/pools/#{pool}")}
   >
     <div class="flex justify-center pl-5 pt-10">
       <span class="text-5xl"><%= pool.emoji %></span>
@@ -41,27 +42,34 @@
       <h2 class="card-title"><%= pool.title %></h2>
       <p><%= pool.description %></p>
       <div class="card-actions justify-end">
-        <.link class="btn btn-sm btn-primary" navigate={~p"/pools/#{pool}"}>View</.link>
-        <.link class="btn btn-sm btn-primary" patch={~p"/pools/#{pool}/edit"}>Edit</.link>
-        <.link
-          class="btn btn-sm btn-error"
-          phx-click={JS.push("delete", value: %{id: pool.id}) |> hide(id)}
-          data-confirm="Are you sure?"
-        >
-          Delete
-        </.link>
+        <%= if @user_id == pool.user_id do %>
+          <.link class="btn btn-sm btn-primary" patch={~p"/pools/#{pool}/edit"}>Edit</.link>
+          <.link
+            class="btn btn-sm btn-error"
+            phx-click={JS.push("delete", value: %{id: pool.id}) |> hide(id)}
+            data-confirm="Are you sure?"
+          >
+            Delete
+          </.link>
+        <% end %>
       </div>
     </div>
   </section>
 </main>
 
-<.modal :if={@live_action in [:new, :edit]} id="pool-modal" show on_cancel={JS.patch(~p"/pools")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="pool-modal"
+  show
+  on_cancel={if @page == "all", do: JS.patch(~p"/pools"), else: JS.patch(~p"/pools?my")}
+>
   <.live_component
     module={LinkPoolWeb.PoolLive.FormComponent}
     id={@pool.id || :new}
     title={@page_title}
     action={@live_action}
     pool={@pool}
+    user_id={@user_id}
     patch={~p"/pools"}
   />
 </.modal>

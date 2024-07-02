@@ -6,6 +6,8 @@ defmodule LinkPoolWeb.PoolLive.Index do
 
   @impl true
   def mount(params, _session, socket) do
+    socket = assign(socket, :user_id, socket.assigns.current_user.id)
+
     if Map.has_key?(params, "my") do
       socket = assign(socket, :page, "my")
       {:ok, stream(socket, :pools, Pools.my_pools())}
@@ -30,6 +32,7 @@ defmodule LinkPoolWeb.PoolLive.Index do
     socket
     |> assign(:page_title, "New Pool")
     |> assign(:pool, %Pool{})
+    |> assign(:user_id, socket.assigns.current_user.id)
   end
 
   defp apply_action(socket, :index, _params) do
