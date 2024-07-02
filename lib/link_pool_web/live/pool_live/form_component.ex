@@ -20,7 +20,9 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:title]} type="text" label="Title" />
-        <.input field={@form[:description]} type="text" label="Description" />
+        <.input field={@form[:description]} type="textarea" label="Description" />
+        <.input field={@form[:emoji]} type="emoji" label="Pool Emoji" />
+
         <:actions>
           <.button class="btn-accent" phx-disable-with="Saving...">Save Pool</.button>
         </:actions>

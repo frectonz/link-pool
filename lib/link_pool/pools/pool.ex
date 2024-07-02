@@ -7,6 +7,7 @@ defmodule LinkPool.Pools.Pool do
     field :description, :string
     field :title, :string
     field :views, :integer, default: 0
+    field :emoji, :string, default: "⚡️"
 
     timestamps(type: :utc_datetime)
   end
@@ -14,7 +15,7 @@ defmodule LinkPool.Pools.Pool do
   @doc false
   def changeset(pool, attrs) do
     pool
-    |> cast(attrs, [:title, :description, :views, :public])
-    |> validate_required([:title, :description, :views, :public])
+    |> cast(attrs, [:title, :description, :views, :public, :emoji])
+    |> validate_required([:title, :description, :emoji])
   end
 end

@@ -22,8 +22,28 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+import "emoji-picker-element"
+
+/**
+ * @type {Object.<string, import("phoenix_live_view").ViewHook>}
+ */
+let Hooks = {}
+Hooks.EmojiInput = {
+  mounted() {
+    const picker = this.el.querySelector("#picker");
+    const input = this.el.querySelector("#input");
+
+    picker.addEventListener("emoji-click", e => {
+      input.value = e.detail.unicode;
+      const event = new Event("change", { bubbles: true });
+      input.dispatchEvent(event);
+    })
+  }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
+  hooks: Hooks,
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken}
 })

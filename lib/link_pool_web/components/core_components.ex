@@ -276,7 +276,7 @@ defmodule LinkPoolWeb.CoreComponents do
   attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file month number password
-               range search select tel text textarea time url week)
+               range search select tel text textarea time url week emoji)
 
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
@@ -362,6 +362,38 @@ defmodule LinkPoolWeb.CoreComponents do
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
       <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    """
+  end
+
+  def input(%{type: "emoji"} = assigns) do
+    ~H"""
+    <div id="emoji-input" phx-hook="EmojiInput" class="grid grid-cols-1 gap-4">
+      <.label for="input"><%= @label %></.label>
+      <input
+        id="input"
+        name={@name}
+        type="hidden"
+        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+      />
+
+      <div>
+        <p
+          id="display"
+          class={[
+            "text-xl bg-base-200 rounded-full w-fit p-2",
+            @errors == [] && "border-zinc-300 focus:border-zinc-400",
+            @errors != [] && "border-rose-400 focus:border-rose-400"
+          ]}
+        >
+          <%= Phoenix.HTML.Form.normalize_value(@type, @value) %>
+        </p>
+        <.error :for={msg <- @errors}><%= msg %></.error>
+      </div>
+
+      <div class="rounded-xl shadow-md w-full overflow-hidden">
+        <emoji-picker id="picker" class="light"></emoji-picker>
+      </div>
     </div>
     """
   end
