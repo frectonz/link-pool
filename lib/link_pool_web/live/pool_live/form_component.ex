@@ -21,6 +21,7 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
       >
         <.input field={@form[:title]} type="text" label="Title" />
         <.input field={@form[:description]} type="textarea" label="Description" />
+        <.input field={@form[:public]} type="checkbox" label="Public" />
         <.input field={@form[:emoji]} type="emoji" label="Pool Emoji" />
 
         <:actions>

@@ -30,8 +30,8 @@ defmodule LinkPool.Pools do
       [%Pool{}, ...]
 
   """
-  def my_pools do
-    Repo.all(from p in Pool, where: p.public == false)
+  def my_pools(user_id) do
+    Repo.all(from p in Pool, where: p.user_id == ^user_id)
   end
 
   @doc """

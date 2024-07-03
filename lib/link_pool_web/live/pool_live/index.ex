@@ -10,7 +10,7 @@ defmodule LinkPoolWeb.PoolLive.Index do
 
     if Map.has_key?(params, "my") do
       socket = assign(socket, :page, "my")
-      {:ok, stream(socket, :pools, Pools.my_pools())}
+      {:ok, stream(socket, :pools, Pools.my_pools(socket.assigns.current_user.id))}
     else
       socket = assign(socket, :page, "all")
       {:ok, stream(socket, :pools, Pools.list_pools())}
