@@ -14,66 +14,70 @@
       </.link>
     <% end %>
 
-    <.link patch={~p"/pools/new"}>
-      <.button>New Pool</.button>
-    </.link>
+    <%= if @live_action != :new do %>
+      <.link patch={~p"/pools/new"}>
+        <.button>New Pool</.button>
+      </.link>
+    <% end %>
+
+    <%= if @live_action == :new do %>
+      <.link navigate={if @page == "my", do: ~p"/pools?my", else: ~p"/pools"}>
+        <.button>Go Back</.button>
+      </.link>
+    <% end %>
   </div>
 </header>
 
-<main id="pools" phx-update="stream" class="grid grid-cols-1 gap-4 my-4">
-  <section
-    id="songs-empty"
-    class="only:flex hidden flex-col items-center gap-8 bg-base-200 rounded-xl py-8"
-  >
-    <img src="/images/open_box.svg" class="max-w-sm rounded-lg" />
-    <h2 class="text-xl">No pools found</h2>
-  </section>
+<%= if @live_action == :index do %>
+  <main id="pools" phx-update="stream" class="grid grid-cols-1 gap-4 my-4">
+    <section id="songs-empty" class="only:flex hidden flex-col items-center gap-8 py-8">
+      <img src="/images/open_box.svg" class="max-w-sm rounded-lg" />
+      <h2 class="text-xl">No pools found</h2>
+    </section>
 
-  <section
-    :for={{id, pool} <- @streams.pools}
-    class="card card-side bg-base-100 shadow-lg cursor-pointer"
-    id={id}
-    phx-click={JS.navigate(~p"/pools/#{pool}")}
-  >
-    <div class="flex justify-center pl-5 pt-10">
-      <span class="text-5xl"><%= pool.emoji %></span>
-    </div>
-    <div class="card-body">
-      <h2 class="card-title"><%= pool.title %></h2>
-      <p><%= pool.description %></p>
-      <div class="card-actions justify-end items-center">
-        <div title={pool.views} class="btn btn-sm">
-          <.icon name="hero-eye" class="w-5 h-5" />
-          <%= Number.Human.number_to_human(pool.views) %>
-        </div>
-        <%= if @user_id == pool.user_id do %>
-          <.link class="btn btn-sm btn-primary" patch={~p"/pools/#{pool}/edit"}>Edit</.link>
-          <.link
-            class="btn btn-sm btn-error"
-            phx-click={JS.push("delete", value: %{id: pool.id}) |> hide(id)}
-            data-confirm="Are you sure?"
-          >
-            Delete
-          </.link>
-        <% end %>
+    <section
+      :for={{id, pool} <- @streams.pools}
+      class="card card-side bg-base-100 shadow-md cursor-pointer"
+      id={id}
+      phx-click={JS.navigate(~p"/pools/#{pool}")}
+    >
+      <div class="flex justify-center pl-5 pt-10">
+        <span class="text-5xl"><%= pool.emoji %></span>
       </div>
-    </div>
-  </section>
-</main>
+      <div class="card-body">
+        <h2 class="card-title"><%= pool.title %></h2>
+        <p><%= pool.description %></p>
+        <div class="card-actions justify-end items-center">
+          <div title={pool.views} class="btn btn-sm">
+            <.icon name="hero-eye" class="w-5 h-5" />
+            <%= Number.Human.number_to_human(pool.views) %>
+          </div>
+          <%= if @user_id == pool.user_id do %>
+            <.link class="btn btn-sm btn-primary" patch={~p"/pools/#{pool}/edit"}>Edit</.link>
+            <.link
+              class="btn btn-sm btn-error"
+              phx-click={JS.push("delete", value: %{id: pool.id}) |> hide(id)}
+              data-confirm="Are you sure?"
+            >
+              Delete
+            </.link>
+          <% end %>
+        </div>
+      </div>
+    </section>
+  </main>
+<% end %>
 
-<.modal
-  :if={@live_action in [:new, :edit]}
-  id="pool-modal"
-  show
-  on_cancel={if @page == "all", do: JS.patch(~p"/pools"), else: JS.patch(~p"/pools?my")}
->
-  <.live_component
-    module={LinkPoolWeb.PoolLive.FormComponent}
-    id={@pool.id || :new}
-    title={@page_title}
-    action={@live_action}
-    pool={@pool}
-    user_id={@user_id}
-    patch={~p"/pools"}
-  />
-</.modal>
+<%= if @live_action in [:new, :edit] do %>
+  <main class="p-4 my-4 rounded-lg ">
+    <.live_component
+      module={LinkPoolWeb.PoolLive.FormComponent}
+      id={@pool.id || :new}
+      title={@page_title}
+      action={@live_action}
+      pool={@pool}
+      user_id={@user_id}
+      patch={~p"/pools"}
+    />
+  </main>
+<% end %>
