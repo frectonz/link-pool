@@ -41,7 +41,11 @@
     <div class="card-body">
       <h2 class="card-title"><%= pool.title %></h2>
       <p><%= pool.description %></p>
-      <div class="card-actions justify-end">
+      <div class="card-actions justify-end items-center">
+        <div title={pool.views} class="btn btn-sm">
+          <.icon name="hero-eye" class="w-5 h-5" />
+          <%= Number.Human.number_to_human(pool.views) %>
+        </div>
         <%= if @user_id == pool.user_id do %>
           <.link class="btn btn-sm btn-primary" patch={~p"/pools/#{pool}/edit"}>Edit</.link>
           <.link
