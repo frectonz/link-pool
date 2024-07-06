@@ -26,7 +26,7 @@ defmodule LinkPool.Pools do
 
   ## Examples
 
-      iex> my_pools()
+      iex> my_pools(user_id)
       [%Pool{}, ...]
 
   """
@@ -84,6 +84,23 @@ defmodule LinkPool.Pools do
     pool
     |> Pool.changeset(attrs)
     |> Repo.update()
+  end
+
+  @doc """
+  Incerment page views of a pool.
+
+  ## Examples
+
+      iex> inc_page_views(pool)
+      {:ok, %Pool{}}
+
+  """
+  def inc_page_views(%Pool{} = pool) do
+    {1, [%Pool{views: views}]} =
+      from(p in Pool, where: p.id == ^pool.id, select: [:views])
+      |> Repo.update_all(inc: [views: 1])
+
+    put_in(pool.views, views)
   end
 
   @doc """

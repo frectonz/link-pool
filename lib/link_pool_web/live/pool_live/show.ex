@@ -10,10 +10,12 @@ defmodule LinkPoolWeb.PoolLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    pool = id |> Pools.get_pool!() |> Pools.inc_page_views()
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:pool, Pools.get_pool!(id))}
+     |> assign(:pool, pool)}
   end
 
   defp page_title(:show), do: "Show Pool"

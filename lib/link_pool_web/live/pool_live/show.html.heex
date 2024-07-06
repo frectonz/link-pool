@@ -1,23 +1,27 @@
-<.header>
-  Pool <%= @pool.id %>
-  <:subtitle>This is a pool record from your database.</:subtitle>
+<.header class="mb-5">
+  <%= @pool.title %>
+  <:subtitle><%= @pool.description %></:subtitle>
+
   <:actions>
-    <.link patch={~p"/pools/#{@pool}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit pool</.button>
-    </.link>
+    <%= if @live_action == :show do %>
+      <.link patch={~p"/pools/#{@pool}/show/edit"}>
+        <.button>Edit pool</.button>
+      </.link>
+    <% end %>
+
+    <%= if @live_action == :edit do %>
+      <.link patch={~p"/pools/#{@pool}"}>
+        <.button>Go Back</.button>
+      </.link>
+    <% end %>
   </:actions>
 </.header>
 
-<.list>
-  <:item title="Title"><%= @pool.title %></:item>
-  <:item title="Description"><%= @pool.description %></:item>
-  <:item title="Views"><%= @pool.views %></:item>
-  <:item title="Public"><%= @pool.public %></:item>
-</.list>
+<%= if @live_action == :show do %>
+  <.back navigate={~p"/pools"}>Back to pools</.back>
+<% end %>
 
-<.back navigate={~p"/pools"}>Back to pools</.back>
-
-<.modal :if={@live_action == :edit} id="pool-modal" show on_cancel={JS.patch(~p"/pools/#{@pool}")}>
+<%= if @live_action == :edit do %>
   <.live_component
     module={LinkPoolWeb.PoolLive.FormComponent}
     id={@pool.id}
@@ -26,4 +30,4 @@
     pool={@pool}
     patch={~p"/pools/#{@pool}"}
   />
-</.modal>
+<% end %>
