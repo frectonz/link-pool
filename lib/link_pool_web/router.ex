@@ -70,6 +70,7 @@ defmodule LinkPoolWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       live "/pools", PoolLive.Index, :index
+      live "/pools/my", PoolLive.Index, :my
       live "/pools/new", PoolLive.Index, :new
       live "/pools/:id/edit", PoolLive.Index, :edit
 
