@@ -56,7 +56,10 @@
         <span class="text-5xl"><%= pool.emoji %></span>
       </div>
       <div class="card-body">
-        <h2 class="card-title"><%= pool.title %></h2>
+        <h2 class="card-title">
+          <%= pool.title %>
+          <span class="w-fit badge">By <%= pool.user.username %></span>
+        </h2>
         <p><%= pool.description %></p>
         <div class="card-actions justify-end items-center">
           <div title={pool.views} class="btn btn-sm">

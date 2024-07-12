@@ -18,7 +18,7 @@ defmodule LinkPool.Pools do
 
   """
   def list_pools do
-    Repo.all(from p in Pool, where: p.public)
+    Repo.all(from p in Pool, where: p.public) |> Repo.preload(:user)
   end
 
   @doc """
