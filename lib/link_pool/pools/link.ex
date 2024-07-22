@@ -9,13 +9,22 @@ defmodule LinkPool.Pools.Link do
     field :icon, :string
     belongs_to :pool, Pool
 
+    field(:delete, :boolean, virtual: true)
+
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(link, attrs) do
-    link
-    |> cast(attrs, [:title, :url, :icon])
-    |> validate_required([:title, :url, :icon])
+    changeset =
+      link
+      |> cast(attrs, [:title, :url, :icon])
+      |> validate_required([:title, :url, :icon])
+
+    if get_change(changeset, :delete) do
+      %{changeset | action: :delete}
+    else
+      changeset
+    end
   end
 end

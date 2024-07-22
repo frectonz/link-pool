@@ -29,7 +29,7 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
           <legend class="text-xl font-bold">Links</legend>
           <div class="grid gap-1">
             <.inputs_for :let={link} field={@form[:links]}>
-              <.input field={link[:url]} type="text" label="URL" />
+              <.link_component parent={@myself} link={link} />
             </.inputs_for>
           </div>
           <.button class="mt-2" type="button" phx-target={@myself} phx-click="add_link">Add</.button>
@@ -39,6 +39,36 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
           <.button class="btn-accent" phx-disable-with="Saving...">Save Pool</.button>
         </:actions>
       </.simple_form>
+    </div>
+    """
+  end
+
+  def link_component(assigns) do
+    assigns =
+      assign(assigns, :deleted, Phoenix.HTML.Form.input_value(assigns.link, :delete) == true)
+
+    ~H"""
+    <div class={if(@deleted, do: "opacity-50")}>
+      <input
+        type="hidden"
+        name={Phoenix.HTML.Form.input_name(@link, :delete)}
+        value={to_string(Phoenix.HTML.Form.input_value(@link, :delete))}
+      />
+      <div class="w-full flex gap-4 items-end">
+        <div class="grow">
+          <.input field={@link[:url]} type="text" label="URL" />
+        </div>
+        <.button
+          class="shrink"
+          type="button"
+          phx-click="delete_link"
+          phx-target={@parent}
+          phx-value-index={@link.index}
+          disabled={@deleted}
+        >
+          Delete
+        </.button>
+      </div>
     </div>
     """
   end
@@ -71,6 +101,30 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
         existing = Ecto.Changeset.get_assoc(changeset, :links)
         changeset = Ecto.Changeset.put_assoc(changeset, :links, existing ++ [%Link{}])
         to_form(changeset)
+      end)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("delete_link", %{"index" => index}, socket) do
+    index = String.to_integer(index)
+
+    socket =
+      update(socket, :form, fn %{source: changeset} ->
+        existing = Ecto.Changeset.get_assoc(changeset, :links)
+        {to_delete, rest} = List.pop_at(existing, index)
+
+        lines =
+          if Ecto.Changeset.change(to_delete).data.id do
+            List.replace_at(existing, index, Ecto.Changeset.change(to_delete, delete: true))
+          else
+            rest
+          end
+
+        changeset
+        |> Ecto.Changeset.put_assoc(:links, lines)
+        |> to_form()
       end)
 
     {:noreply, socket}

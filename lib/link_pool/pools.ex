@@ -132,6 +132,11 @@ defmodule LinkPool.Pools do
   def change_pool(%Pool{} = pool, attrs \\ %{}) do
     changeset = Pool.changeset(pool, attrs)
     existing = Ecto.Changeset.get_assoc(changeset, :links)
-    Ecto.Changeset.put_assoc(changeset, :links, existing ++ [%Link{}])
+
+    if existing == [] do
+      Ecto.Changeset.put_assoc(changeset, :links, existing ++ [%Link{}])
+    else
+      changeset
+    end
   end
 end
