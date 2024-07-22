@@ -1,4 +1,5 @@
 defmodule LinkPoolWeb.PoolLive.Index do
+  alias LinkPool.Pools.Link
   use LinkPoolWeb, :live_view
 
   alias LinkPool.Pools

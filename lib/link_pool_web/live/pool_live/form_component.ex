@@ -1,4 +1,5 @@
 defmodule LinkPoolWeb.PoolLive.FormComponent do
+  alias LinkPool.Pools.Link
   use LinkPoolWeb, :live_component
 
   alias LinkPool.Pools
@@ -24,6 +25,16 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
         <.input field={@form[:public]} type="checkbox" label="Public" />
         <.input field={@form[:emoji]} type="emoji" label="Pool Emoji" />
 
+        <fieldset class="py-8 grid gap-6">
+          <legend class="text-xl font-bold">Links</legend>
+          <div class="grid gap-1">
+            <.inputs_for :let={link} field={@form[:links]}>
+              <.input field={link[:url]} type="text" label="URL" />
+            </.inputs_for>
+          </div>
+          <.button class="mt-2" type="button" phx-target={@myself} phx-click="add_link">Add</.button>
+        </fieldset>
+
         <:actions>
           <.button class="btn-accent" phx-disable-with="Saving...">Save Pool</.button>
         </:actions>
@@ -48,8 +59,21 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
+  @impl true
   def handle_event("save", %{"pool" => pool_params}, socket) do
     save_pool(socket, socket.assigns.action, pool_params)
+  end
+
+  @impl true
+  def handle_event("add_link", _, socket) do
+    socket =
+      update(socket, :form, fn %{source: changeset} ->
+        existing = Ecto.Changeset.get_assoc(changeset, :links)
+        changeset = Ecto.Changeset.put_assoc(changeset, :links, existing ++ [%Link{}])
+        to_form(changeset)
+      end)
+
+    {:noreply, socket}
   end
 
   defp save_pool(socket, :edit, pool_params) do

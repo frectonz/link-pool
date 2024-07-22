@@ -4,6 +4,7 @@ defmodule LinkPool.Pools do
   """
 
   import Ecto.Query, warn: false
+  alias LinkPool.Pools.Link
   alias LinkPool.Repo
 
   alias LinkPool.Pools.Pool
@@ -129,6 +130,8 @@ defmodule LinkPool.Pools do
 
   """
   def change_pool(%Pool{} = pool, attrs \\ %{}) do
-    Pool.changeset(pool, attrs)
+    changeset = Pool.changeset(pool, attrs)
+    existing = Ecto.Changeset.get_assoc(changeset, :links)
+    Ecto.Changeset.put_assoc(changeset, :links, existing ++ [%Link{}])
   end
 end
