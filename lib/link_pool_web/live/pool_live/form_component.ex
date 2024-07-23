@@ -55,9 +55,10 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
         value={to_string(Phoenix.HTML.Form.input_value(@link, :delete))}
       />
       <div class="w-full grid gap-4 p-4 border border-black">
-        <div clas="flex gap-2 items-center">
-          <img src={Phoenix.HTML.Form.input_value(@link, :icon)} class="w-4 bg-base-200 rounded-full" />
-          <p class="grow"><%= Phoenix.HTML.Form.input_value(@link, :title) %></p>
+        <h1 class="font-bold">Preview</h1>
+        <div class="flex gap-2 items-center p-2 bg-base-200">
+          <img src={Phoenix.HTML.Form.input_value(@link, :icon)} class="w-10 empty:h-10 empty:skeleton" />
+          <p class="grow empty:skeleton empty:w-40 empty:h-10"><%= Phoenix.HTML.Form.input_value(@link, :title) %></p>
         </div>
 
         <.input field={@link[:url]} type="text" label="URL" />

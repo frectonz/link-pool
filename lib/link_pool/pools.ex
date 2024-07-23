@@ -32,7 +32,7 @@ defmodule LinkPool.Pools do
 
   """
   def my_pools(user_id) do
-    Repo.all(from p in Pool, where: p.user_id == ^user_id)
+    Repo.all(from p in Pool, where: p.user_id == ^user_id) |> Repo.preload(:user)
   end
 
   @doc """
