@@ -54,10 +54,14 @@ defmodule LinkPoolWeb.PoolLive.FormComponent do
         name={Phoenix.HTML.Form.input_name(@link, :delete)}
         value={to_string(Phoenix.HTML.Form.input_value(@link, :delete))}
       />
-      <div class="w-full flex gap-4 items-end">
-        <div class="grow">
-          <.input field={@link[:url]} type="text" label="URL" />
+      <div class="w-full grid gap-4 p-4 border border-black">
+        <div clas="flex gap-2 items-center">
+          <img src={Phoenix.HTML.Form.input_value(@link, :icon)} class="w-4 bg-base-200 rounded-full" />
+          <p class="grow"><%= Phoenix.HTML.Form.input_value(@link, :title) %></p>
         </div>
+
+        <.input field={@link[:url]} type="text" label="URL" />
+
         <.button
           class="shrink"
           type="button"
